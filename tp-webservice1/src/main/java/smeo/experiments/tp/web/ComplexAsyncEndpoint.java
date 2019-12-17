@@ -4,6 +4,8 @@ import com.testplatform.springsoap.gen.GetOneServiceComplexAsyncRequest;
 import com.testplatform.springsoap.gen.GetOneServiceComplexAsyncResponse;
 import com.testplatform.springsoap.gen.GetOneServiceComplexSyncRequest;
 import com.testplatform.springsoap.gen.GetOneServiceComplexSyncResponse;
+import io.micrometer.core.annotation.Timed;
+import org.checkerframework.checker.units.qual.Time;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -15,6 +17,7 @@ import java.util.Random;
 import java.util.concurrent.*;
 
 @Endpoint
+@Timed(extraTags = {"endpoint", "complexAsync", "service", "web_a"})
 public class ComplexAsyncEndpoint {
 
     private static final String NAMESPACE_URI = "http://www.testplatform.com/springsoap/gen";
@@ -29,6 +32,7 @@ public class ComplexAsyncEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getOneServiceComplexAsyncRequest")
     @ResponsePayload
+    @Timed(extraTags = {"service", "web_a"})
     public GetOneServiceComplexAsyncResponse getComplexAsync(@RequestPayload GetOneServiceComplexAsyncRequest request) {
         GetOneServiceComplexAsyncResponse response = new GetOneServiceComplexAsyncResponse();
         method2(response);

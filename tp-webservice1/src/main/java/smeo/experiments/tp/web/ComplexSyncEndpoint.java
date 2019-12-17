@@ -2,6 +2,7 @@ package smeo.experiments.tp.web;
 
 import com.testplatform.springsoap.gen.GetOneServiceComplexSyncRequest;
 import com.testplatform.springsoap.gen.GetOneServiceComplexSyncResponse;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -10,6 +11,8 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import java.util.Random;
 
 @Endpoint
+@Timed(extraTags = {"service", "web_a"})
+
 public class ComplexSyncEndpoint {
 
     private static final String NAMESPACE_URI = "http://www.testplatform.com/springsoap/gen";
@@ -20,6 +23,7 @@ public class ComplexSyncEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getOneServiceComplexSyncRequest")
     @ResponsePayload
+    @Timed(extraTags = {"service", "web_a"})
     public GetOneServiceComplexSyncResponse getComplexSync(@RequestPayload GetOneServiceComplexSyncRequest request) {
         GetOneServiceComplexSyncResponse response = new GetOneServiceComplexSyncResponse();
         method2(response);
