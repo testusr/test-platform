@@ -1,9 +1,16 @@
 package smeo.experiments.tp.web;
 
+import io.micrometer.core.aop.TimedAspect;
+import io.micrometer.core.instrument.Clock;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.influx.InfluxConfig;
+import io.micrometer.influx.InfluxMeterRegistry;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.config.annotation.WsConfigurerAdapter;
@@ -12,8 +19,13 @@ import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
 
+import java.time.Duration;
+
 @EnableWs
 @Configuration
+@EnableAspectJAutoProxy
+@ComponentScan("smeo.experiments.tp.web")
+
 public class WebServiceConfig extends WsConfigurerAdapter {
     @Bean
     public ServletRegistrationBean messageDispatcherServlet(ApplicationContext applicationContext) {
@@ -33,13 +45,38 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         return wsdl11Definition;
     }
 
+    // ### MICROMETER
     @Bean
     public XsdSchema countriesSchema() {
         return new SimpleXsdSchema(new ClassPathResource("countries.xsd"));
     }
 
-//    @Bean
-//    ServletWebServerFactory servletWebServerFactory(){
-//        return new TomcatServletWebServerFactory();
-//    }
+    @Bean
+    public MeterRegistry getRegistry() {
+
+        InfluxConfig config = new InfluxConfig() {
+            @Override
+            public Duration step() {
+                return Duration.ofSeconds(1);
+            }
+
+            @Override
+            public String db() {
+                return "micrometer";
+            }
+
+            @Override
+            public String get(String s) {
+                return null;
+            }
+        };
+        return new InfluxMeterRegistry(config, Clock.SYSTEM);
+    }
+
+    @Bean
+    public TimedAspect timedAspect(MeterRegistry registry) {
+        return new TimedAspect(registry);
+    }
+
+    // ### MICROMETER‚
 }
