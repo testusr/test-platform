@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.testplatform.com/springsoap/gen"
+           targetNamespace="http://www.testplatform.com/springsoap/gen" elementFormDefault="qualified">
+
+    <xs:element name="getOneServiceSimpleSyncRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="requestTime" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getOneServiceSimpleSyncResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="endMethod" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:gs="http://www.testplatform.com/springsoap/gen">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <gs:getOneServiceComplexAsyncRequest>
+            <gs:requestTime>1234</gs:requestTime>
+        </gs:getOneServiceComplexAsyncRequest>
+    </soapenv:Body>
+</soapenv:Envelope>
