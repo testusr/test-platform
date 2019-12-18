@@ -20,9 +20,9 @@ import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
-import zipkin.Span;
-import zipkin.reporter.AsyncReporter;
-import zipkin.reporter.okhttp3.OkHttpSender;
+import zipkin2.Span;
+import zipkin2.reporter.AsyncReporter;
+import zipkin2.reporter.okhttp3.OkHttpSender;
 
 import java.time.Duration;
 
@@ -51,11 +51,11 @@ public class WebServiceConfig extends WsConfigurerAdapter {
 
     @Bean
     public io.opentracing.Tracer zipkinTracer() {
-        OkHttpSender okHttpSender = OkHttpSender.create("http://localhost:9411/api/v1/spans");
+        OkHttpSender okHttpSender = OkHttpSender.create("http://localhost:9411/api/v2/spans");
         AsyncReporter<Span> reporter = AsyncReporter.builder(okHttpSender).build();
         Tracing braveTracer = Tracing.newBuilder()
                 .localServiceName("spring-boot")
-                .reporter(reporter)
+                .spanReporter(reporter)
                 .build();
         return BraveTracer.create(braveTracer);
     }

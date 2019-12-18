@@ -59,18 +59,18 @@
     <dependency>
       <groupId>io.opentracing.brave</groupId>
       <artifactId>brave-opentracing</artifactId>
-      <version>0.20.0</version>
+      <version>0.34.2</version>
     </dependency>
     <dependency>
       <groupId>io.opentracing.contrib</groupId>
-      <artifactId>opentracing-spring-web-autoconfigure</artifactId>
-      <version>0.0.4</version>
+      <artifactId>opentracing-spring-web-starter</artifactId>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
-    <groupId>io.zipkin.reporter</groupId>
-    <artifactId>zipkin-sender-okhttp3</artifactId>
-    <version>0.10.0</version>
-  </dependency>
+      <groupId>io.zipkin.reporter2</groupId>
+      <artifactId>zipkin-sender-okhttp3</artifactId>
+      <version>2.12.0</version>
+    </dependency>
 
   </dependencies>
 

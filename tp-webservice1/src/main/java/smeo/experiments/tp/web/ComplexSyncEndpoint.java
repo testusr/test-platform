@@ -12,7 +12,6 @@ import java.util.Random;
 
 @Endpoint
 @Timed(extraTags = {"service", "web_a"})
-
 public class ComplexSyncEndpoint {
 
     private static final String NAMESPACE_URI = "http://www.testplatform.com/springsoap/gen";
