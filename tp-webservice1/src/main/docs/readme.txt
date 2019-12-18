@@ -11,3 +11,17 @@ curl --header "content-type: text/xml" -d @simplesync_request.xml http://localho
 
 docker start influxdb
 docker exec -it influxdb influx
+
+
+-- opentracing
+https://www.youtube.com/watch?v=RvCcWltMY7U
+https://www.hawkular.org/blog/2017/06/9/opentracing-spring-boot.html
+
+docker run -p 9411:9411 openzipkin/zipkin
+http://localhost:9411/zipkin
+
+
+async -
+ - reference types - childOf, followsFrom (kicked off but parent does not wait)
+-- zipkin
+

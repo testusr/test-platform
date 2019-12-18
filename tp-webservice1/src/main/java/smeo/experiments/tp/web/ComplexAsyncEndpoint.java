@@ -5,7 +5,10 @@ import com.testplatform.springsoap.gen.GetOneServiceComplexAsyncResponse;
 import com.testplatform.springsoap.gen.GetOneServiceComplexSyncRequest;
 import com.testplatform.springsoap.gen.GetOneServiceComplexSyncResponse;
 import io.micrometer.core.annotation.Timed;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.checkerframework.checker.units.qual.Time;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -34,9 +37,11 @@ public class ComplexAsyncEndpoint {
     @ResponsePayload
     @Timed(extraTags = {"service", "web_a"})
     public GetOneServiceComplexAsyncResponse getComplexAsync(@RequestPayload GetOneServiceComplexAsyncRequest request) {
+       // Span mySpan = tracer.buildSpan("getOneServiceComplexAsync").start();
         GetOneServiceComplexAsyncResponse response = new GetOneServiceComplexAsyncResponse();
         method2(response);
         response.setEndMethod1(System.currentTimeMillis());
+        //mySpan.finish();
         return response;
     }
 

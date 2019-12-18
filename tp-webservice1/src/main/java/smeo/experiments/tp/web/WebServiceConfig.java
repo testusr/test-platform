@@ -1,6 +1,7 @@
 package smeo.experiments.tp.web;
 
-import io.micrometer.core.annotation.Timed;
+import brave.Tracing;
+import brave.opentracing.BraveTracer;
 import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -19,6 +20,9 @@ import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
+import zipkin.Span;
+import zipkin.reporter.AsyncReporter;
+import zipkin.reporter.okhttp3.OkHttpSender;
 
 import java.time.Duration;
 
@@ -26,7 +30,6 @@ import java.time.Duration;
 @Configuration
 @EnableAspectJAutoProxy
 @ComponentScan("smeo.experiments.tp.web")
-
 public class WebServiceConfig extends WsConfigurerAdapter {
     @Bean
     public ServletRegistrationBean messageDispatcherServlet(ApplicationContext applicationContext) {
@@ -44,6 +47,17 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         wsdl11Definition.setTargetNamespace("http://www.testplatform.com/springsoap/gen");
         wsdl11Definition.setSchema(countriesSchema);
         return wsdl11Definition;
+    }
+
+    @Bean
+    public io.opentracing.Tracer zipkinTracer() {
+        OkHttpSender okHttpSender = OkHttpSender.create("http://localhost:9411/api/v1/spans");
+        AsyncReporter<Span> reporter = AsyncReporter.builder(okHttpSender).build();
+        Tracing braveTracer = Tracing.newBuilder()
+                .localServiceName("spring-boot")
+                .reporter(reporter)
+                .build();
+        return BraveTracer.create(braveTracer);
     }
 
     // ### MICROMETER
