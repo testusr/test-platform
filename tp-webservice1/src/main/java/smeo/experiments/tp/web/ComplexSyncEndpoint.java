@@ -7,6 +7,7 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+import smeo.experiments.tp.web.aspect.Traced;
 
 import java.util.Random;
 
@@ -23,6 +24,7 @@ public class ComplexSyncEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getOneServiceComplexSyncRequest")
     @ResponsePayload
     @Timed(extraTags = {"service", "web_a"})
+    @Traced
     public GetOneServiceComplexSyncResponse getComplexSync(@RequestPayload GetOneServiceComplexSyncRequest request) {
         GetOneServiceComplexSyncResponse response = new GetOneServiceComplexSyncResponse();
         method2(response);
@@ -31,7 +33,8 @@ public class ComplexSyncEndpoint {
         return response;
     }
 
-    private void method4(GetOneServiceComplexSyncResponse response) {
+    @Traced
+    public void method4(GetOneServiceComplexSyncResponse response) {
         try {
             Thread.sleep(random.nextInt(300));
         } catch (InterruptedException e) {
@@ -40,7 +43,8 @@ public class ComplexSyncEndpoint {
         response.setEndMethod4(System.currentTimeMillis());
     }
 
-    private void method2(GetOneServiceComplexSyncResponse response) {
+    @Traced
+    public void method2(GetOneServiceComplexSyncResponse response) {
         try {
             Thread.sleep(random.nextInt(1000));
         } catch (InterruptedException e) {
@@ -50,7 +54,8 @@ public class ComplexSyncEndpoint {
         response.setEndMethod2(System.currentTimeMillis());
     }
 
-    private void method3(GetOneServiceComplexSyncResponse response) {
+    @Traced
+    public void method3(GetOneServiceComplexSyncResponse response) {
         try {
             Thread.sleep(50);
         } catch (InterruptedException e) {

@@ -54,7 +54,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         OkHttpSender okHttpSender = OkHttpSender.create("http://localhost:9411/api/v2/spans");
         AsyncReporter<Span> reporter = AsyncReporter.builder(okHttpSender).build();
         Tracing braveTracer = Tracing.newBuilder()
-                .localServiceName("spring-boot")
+                .localServiceName("soap-service1")
                 .spanReporter(reporter)
                 .build();
         return BraveTracer.create(braveTracer);

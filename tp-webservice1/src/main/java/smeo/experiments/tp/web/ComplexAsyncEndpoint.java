@@ -2,17 +2,12 @@ package smeo.experiments.tp.web;
 
 import com.testplatform.springsoap.gen.GetOneServiceComplexAsyncRequest;
 import com.testplatform.springsoap.gen.GetOneServiceComplexAsyncResponse;
-import com.testplatform.springsoap.gen.GetOneServiceComplexSyncRequest;
-import com.testplatform.springsoap.gen.GetOneServiceComplexSyncResponse;
 import io.micrometer.core.annotation.Timed;
-import io.opentracing.Span;
-import io.opentracing.Tracer;
-import org.checkerframework.checker.units.qual.Time;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+import smeo.experiments.tp.web.aspect.Traced;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +23,7 @@ public class ComplexAsyncEndpoint {
 
     BlockingQueue<Runnable> queue = new ArrayBlockingQueue<Runnable>(50);
 
-    ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 20, 5000, TimeUnit.MILLISECONDS, queue);
+    ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 20, 5000, TimeUnit.MILLISECONDS, queue);
 
     public ComplexAsyncEndpoint() {
     }
@@ -36,16 +31,16 @@ public class ComplexAsyncEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getOneServiceComplexAsyncRequest")
     @ResponsePayload
     @Timed(extraTags = {"service", "web_a"})
+    @Traced
     public GetOneServiceComplexAsyncResponse getComplexAsync(@RequestPayload GetOneServiceComplexAsyncRequest request) {
-       // Span mySpan = tracer.buildSpan("getOneServiceComplexAsync").start();
-        GetOneServiceComplexAsyncResponse response = new GetOneServiceComplexAsyncResponse();
-        method2(response);
-        response.setEndMethod1(System.currentTimeMillis());
-        //mySpan.finish();
-        return response;
+            GetOneServiceComplexAsyncResponse response = new GetOneServiceComplexAsyncResponse();
+            method2(response);
+            response.setEndMethod1(System.currentTimeMillis());
+            return response;
     }
 
-    private void method2(GetOneServiceComplexAsyncResponse response) {
+    @Traced
+    public void method2(GetOneServiceComplexAsyncResponse response) {
         List<FutureTask> futureTasks = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             FutureTask newTask = new FutureTask(() -> doSomethingMethod());
@@ -65,12 +60,14 @@ public class ComplexAsyncEndpoint {
     }
 
     private Long doSomethingMethod() {
+        //Span span = childSpan(tracer, "doSomething");
         long start = System.currentTimeMillis();
         try {
-            Thread.sleep(random.nextInt(500));
+            Thread.sleep(1000+random.nextInt(500));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        //span.finish();
         return System.currentTimeMillis() - start;
     }
 }
